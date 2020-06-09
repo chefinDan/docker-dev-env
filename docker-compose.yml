@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  app:
+    build: ./app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+      - PORT=7000
+    hostname: app 
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    ports:
+      - "7000:7000"
+    links: 
+      - db
+  pyApp:
+    image: python:3-stretch
+    command: sh -c "pip install flask && python -m server"
+    environment:
+      - PORT=9000
+      - FLASK_ENV=development
+    working_dir: /pyApp
+    volumes:
+      - ./pyApp:/pyApp
+    ports:
+      - '9000:9000'
+  db:
+    image: mongo
